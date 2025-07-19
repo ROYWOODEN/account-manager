@@ -2,7 +2,7 @@ import { ref } from 'vue'
 import { defineStore } from 'pinia'
 
 interface FormData {
-  metka: MetkaArrayValues[] | null;
+  metka?: MetkaArrayValues[] | null;
   type: RecordType;
   login: string;
   password: string | null;
@@ -20,24 +20,17 @@ export const useCounterStore = defineStore('counter', () => {
 
 
   const allData = ref<FormData[]>([]);
-
-    const addFormData = ref<FormData[]>([]);
+  const error = ref<string>('');
 
     
     function addForm (formData: FormData) {
-      addFormData.value.push(formData);
 
-      if(localStorage.getItem('addFormData') !== null) {
-        const data = JSON.parse(localStorage.getItem('addFormData') || '[]');
-        addFormData.value.push(...data);
-        localStorage.setItem('addFormData', JSON.stringify(addFormData.value));
+        const data = JSON.parse(localStorage.getItem('addFormData') || '[]') as FormData[];
+        const  updates = [...data, formData];
+        localStorage.setItem('addFormData', JSON.stringify(updates));
         console.log('Успешно сохранено');
-
-      }
-      else {
-        localStorage.setItem('addFormData', JSON.stringify(addFormData.value));
-        console.log('Успешно сохранено');
-      }
+        getFormData();
+        
     };
 
 
@@ -47,28 +40,36 @@ export const useCounterStore = defineStore('counter', () => {
 
     function getFormData() {
 
-      if(addFormData.value.length > 0) { 
-        allData.value = addFormData.value;
-      }
-      else {
         const data = JSON.parse(localStorage.getItem('addFormData') || '[]');
         console.log(data);
         if(data) {
-          console.log(allData.value);
+          // console.log(allData.value);
           if(Array.isArray(data)) {
-            allData.value = data;
+            allData.value = data.reverse();
           }
           else {
-            allData.value = [data];
+            allData.value = [data].reverse();
           }
         }
-      }
     };
 
+
+
+
+
+
+    function ShowError(err: string) {
+      error.value = err;
+      setTimeout(() => {
+        error.value = '';
+      }, 3000);
+    }
+
     return {
-        addFormData,
         addForm,
         allData,
         getFormData,
+        error,
+        ShowError,
     };
 })

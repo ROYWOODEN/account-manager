@@ -21,7 +21,7 @@
               size="small"
               color="red-lighten-1"
             >
-              {{ metka.text }}
+              {{ metka.text }};
             </v-chip>
           </div>
 
@@ -92,7 +92,7 @@ const showPassword = ref<boolean[]>([]);
 
 function deleteForm(index: number) {
   counterStore.allData.splice(index, 1);
-  localStorage.removeItem('addFormData');
+  localStorage.setItem('addFormData', JSON.stringify(counterStore.allData));
 }
 
 

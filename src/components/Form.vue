@@ -3,26 +3,40 @@
         <v-text-field label="Метка"
             v-model="metka"
             :counter="50"
+            :error="metkaError"
+            @blur="validateMetka"
+            hint="Введите метки через ;"
+            persistent-hint
         />
         <v-select
             clearable
             label="Тип записи"
             :items="['Локальная', 'LDAP']"
             v-model="type"
+            required
+            :error="typeError"
+            @update:model-value="validateType"
         ></v-select>
         <v-text-field 
         label="Логин" 
         v-model="login"
-        :counter="100" />
+        :counter="100"
+        required
+        :error="loginError"
+        @blur="validateLogin"
+        />
 
         <v-text-field 
         v-if="type === 'Локальная'" 
         v-model="password"
         label="Пароль"
-        :counter="100" />
+        :counter="100"
+        required
+        :error="passwordError"
+        @blur="validatePassword" />
 
         <div class="d-flex flex-row align-center justify-center mb-4">
-            <v-btn class="mt-4 text-white d-flex align-center justify-center" color="primary" @click="save">Сохранить</v-btn>
+            <v-btn class="mt-4 text-white d-flex align-center justify-center" color="primary" @click="checkForm">Сохранить</v-btn>
         </div>
     </v-form>
 </template>
@@ -31,11 +45,16 @@
 import { ref } from 'vue'
 import { useCounterStore } from '@/stores/counter'
 
+
+const props = defineProps<{
+    toggleIcon: () => void;
+}>();
+
 const counterStore = useCounterStore();
 type RecordType = 'Локальная' | 'LDAP';
 
 interface FormData {
-    metka: MetkaArrayValues[] | null;
+    metka?: MetkaArrayValues[] | null;
     type: RecordType;
     login: string;
     password: string | null;
@@ -50,6 +69,63 @@ const type = ref<RecordType | null>(null);
 const login = ref<string>('');
 const password = ref<string | null>(null);
 
+
+const metkaError = ref<boolean>(false);
+const typeError = ref<boolean>(false);
+const loginError = ref<boolean>(false);
+const passwordError = ref<boolean>(false);
+
+
+const validateMetka = () => {
+    if (metka.value && metka.value.length > 50) {
+        metkaError.value = true;
+    } else {
+        metkaError.value = false;
+    }
+};
+
+const validateType = () => {
+    if (!type.value) {
+        typeError.value = true;
+    } else {
+        typeError.value = false;
+    }
+};
+
+const validateLogin = () => {
+    if (!login.value.trim()) {
+        loginError.value = true;
+    } else if (login.value.length > 100) {
+        loginError.value = true;
+    } else {
+        loginError.value = false;
+    }
+};
+
+const validatePassword = () => {
+    if (type.value === 'Локальная' && !password.value) {
+        passwordError.value = true;
+    } else if (password.value && password.value.length > 100) {
+        passwordError.value = true;
+    } else {
+        passwordError.value = false;
+    }
+};
+
+function checkForm() {
+
+    validateMetka();
+    validateType();
+    validateLogin();
+    validatePassword();
+
+    if (metkaError.value || typeError.value || loginError.value || passwordError.value) {
+        counterStore.ShowError('Пожалуйста, исправьте ошибки в форме');
+        return;
+    }
+
+    save();
+}
 
 
 const save = () => {
@@ -84,9 +160,19 @@ const save = () => {
             password: password.value
         }
         counterStore.addForm(formData);
-        
-
     }
+
+    metka.value = null;
+    type.value = null;
+    login.value = '';
+    password.value = null;
+    
+    metkaError.value = false;
+    typeError.value = false;
+    loginError.value = false;
+    passwordError.value = false;
+    
+    props.toggleIcon();
 }
 }
 

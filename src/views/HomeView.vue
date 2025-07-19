@@ -12,7 +12,7 @@
 
 
     <div v-if="addAcc" class="w-50">
-      <Form class="w-100" />
+      <Form class="w-100" :toggleIcon="toggleIcon" />
     </div>
     
 
