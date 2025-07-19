@@ -21,7 +21,7 @@
         label="Пароль"
         :counter="100" />
 
-        <div class="d-flex flex-row align-center justify-center">
+        <div class="d-flex flex-row align-center justify-center mb-4">
             <v-btn class="mt-4 text-white d-flex align-center justify-center" color="primary" @click="save">Сохранить</v-btn>
         </div>
     </v-form>
@@ -32,7 +32,7 @@ import { ref } from 'vue'
 import { useCounterStore } from '@/stores/counter'
 
 const counterStore = useCounterStore();
-type RecordType = 'Локальная' | 'LDAP' | null;
+type RecordType = 'Локальная' | 'LDAP';
 
 interface FormData {
     metka: MetkaArrayValues[] | null;
@@ -47,7 +47,7 @@ interface MetkaArrayValues {
 
 const metka = ref<string | null>(null);
 const type = ref<RecordType | null>(null);
-const login = ref<string | null>(null);
+const login = ref<string>('');
 const password = ref<string | null>(null);
 
 
@@ -55,8 +55,7 @@ const password = ref<string | null>(null);
 const save = () => {
     if(type.value && login.value) {
         if(metka.value) {
-            const metkaArray = metka.value.split(';');
-
+            const metkaArray = metka.value.split(';').map(el => el.trim());
 
             const metkaArrayValues: MetkaArrayValues[] = [];
             
@@ -64,7 +63,7 @@ const save = () => {
                 metkaArrayValues.push({text: el});
             });
 
-            console.log(metkaArrayValues , 'metkaArrayValues');
+            // console.log(metkaArrayValues , 'metkaArrayValues');
           
 
 
@@ -75,11 +74,20 @@ const save = () => {
             login: login.value,
             password: password.value
         }
-        counterStore.addFormData.push(formData);
+        counterStore.addForm(formData);
+    }   else {
+        
+        const formData: FormData = {
+            metka: null,
+            type: type.value,
+            login: login.value,
+            password: password.value
         }
+        counterStore.addForm(formData);
         
 
     }
+}
 }
 
 
