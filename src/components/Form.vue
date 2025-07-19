@@ -76,7 +76,6 @@ const save = () => {
             password: password.value
         }
         counterStore.addFormData.push(formData);
-        console.log(counterStore.addFormData);
         }
         
 
