@@ -1,12 +1,10 @@
 <template>
     <v-form>
-        <v-text-field label="Метка"
+        <v-text-field label="Метка (введите метки через ;)"
             v-model="metka"
             :counter="50"
             :error="metkaError"
             @blur="validateMetka"
-            hint="Введите метки через ;"
-            persistent-hint
         />
         <v-select
             clearable

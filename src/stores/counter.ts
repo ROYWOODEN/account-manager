@@ -26,7 +26,7 @@ export const useCounterStore = defineStore('counter', () => {
     function addForm (formData: FormData) {
 
         const data = JSON.parse(localStorage.getItem('addFormData') || '[]') as FormData[];
-        const  updates = [...data, formData];
+        const  updates = [...data, formData]; 
         localStorage.setItem('addFormData', JSON.stringify(updates));
         console.log('Успешно сохранено');
         getFormData();
@@ -45,10 +45,10 @@ export const useCounterStore = defineStore('counter', () => {
         if(data) {
           // console.log(allData.value);
           if(Array.isArray(data)) {
-            allData.value = data.reverse();
+            allData.value = data;
           }
           else {
-            allData.value = [data].reverse();
+            allData.value = [data];
           }
         }
     };
