@@ -10,18 +10,18 @@
       </tr>
     </thead>
     <tbody>
-      <tr v-for="(item, index) in counterStore.allData" :key="index">
+      <tr v-for="({ metka, type, login, password }, index) in counterStore.allData" :key="index">
 
 
         <td>
-          <div v-if="item.metka !== null" class="d-flex flex-wrap" style="gap: 4px; max-width: 200px;">
+          <div v-if="metka !== null" class="d-flex flex-wrap" style="gap: 4px; max-width: 200px;">
             <v-chip
-              v-for="(metka, metkaIndex) in item.metka"
+              v-for="({ text }, metkaIndex) in metka"
               :key="metkaIndex"
               size="small"
               color="red-lighten-1"
             >
-              {{ metka.text }};
+              {{ text }};
             </v-chip>
           </div>
 
@@ -33,19 +33,19 @@
       
 
         <td>
-          <v-chip :color="item.type === 'Локальная' ? 'green-lighten-3' : 'blue-lighten-3'" size="small">
-            {{ item.type }}
+          <v-chip :color="type === 'Локальная' ? 'green-lighten-3' : 'blue-lighten-3'" size="small">
+            {{ type }}
           </v-chip>
         </td>
         
         
-        <td>{{ item.login }}</td>
+        <td>{{ login }}</td>
         
         <td style="width: 200px;">
           <v-text-field
-            v-if="item.password !== null"
+            v-if="password !== null"
             :type="showPassword[index] ? 'text' : 'password'"
-            :model-value="item.password"
+            :model-value="password"
             readonly
             density="compact"
             hide-details

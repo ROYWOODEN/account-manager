@@ -43,24 +43,14 @@
 import { ref } from 'vue'
 import { useCounterStore } from '@/stores/counter'
 
+import type { FormData, RecordType, MetkaArrayValues } from '@/composable/types';
+
 
 const props = defineProps<{
     toggleIcon: () => void;
 }>();
 
 const counterStore = useCounterStore();
-type RecordType = 'Локальная' | 'LDAP';
-
-interface FormData {
-    metka?: MetkaArrayValues[] | null;
-    type: RecordType;
-    login: string;
-    password: string | null;
-}
-
-interface MetkaArrayValues {
-    text: string;
-}
 
 const metka = ref<string | null>(null);
 const type = ref<RecordType | null>(null);

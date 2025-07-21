@@ -1,18 +1,7 @@
 import { ref } from 'vue'
 import { defineStore } from 'pinia'
 
-interface FormData {
-  metka?: MetkaArrayValues[] | null;
-  type: RecordType;
-  login: string;
-  password: string | null;
-}
-
-interface MetkaArrayValues {
-  text: string;
-}
-
-type RecordType = 'Локальная' | 'LDAP';
+import type { FormData } from '@/composable/types';
 
 
 
@@ -34,10 +23,6 @@ export const useCounterStore = defineStore('counter', () => {
     };
 
 
-
-
-
-
     function getFormData() {
 
         const data = JSON.parse(localStorage.getItem('addFormData') || '[]');
@@ -52,10 +37,6 @@ export const useCounterStore = defineStore('counter', () => {
           }
         }
     };
-
-
-
-
 
 
     function ShowError(err: string) {
